@@ -40,6 +40,14 @@ def extract_chunk_urls(chunklist: str) -> list:
             if line.strip().startswith('https://')]
 
 
+def get_aes_key(xmedia_ready: str) -> bytes:
+    """Fetches the 16-byte AES-128 key from the Boomstream API."""
+    r = requests.get(BOOMSTREAM_API + xmedia_ready, headers=HEADERS)
+    r.raise_for_status()
+    # API returns key as a UTF-8 string; each char's ordinal is one key byte
+    return bytes(ord(c) for c in r.text)
+
+
 def extract_iv_from_chunklist(chunklist: str):
     """Returns 16-byte IV from #EXT-X-KEY:IV=0x... or None if absent."""
     for line in chunklist.splitlines():

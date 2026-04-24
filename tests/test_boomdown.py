@@ -67,3 +67,33 @@ def test_extract_iv_present():
 
 def test_extract_iv_absent():
     assert extract_iv_from_chunklist(CHUNKLIST_NO_IV) is None
+
+
+# ── Task 3: AES key retrieval ─────────────────────────────────────────────────
+
+import responses as responses_lib
+from boomdown import get_aes_key
+
+
+@responses_lib.activate
+def test_get_aes_key_returns_16_bytes():
+    key_text = '5p13wrNTEYPCCiiE'  # 16 ASCII chars = 128-bit key
+    responses_lib.add(
+        responses_lib.GET,
+        'https://play.boomstream.com/api/process/abc123',
+        body=key_text,
+    )
+    key_bytes = get_aes_key('abc123')
+    assert len(key_bytes) == 16
+    assert key_bytes == bytes(ord(c) for c in key_text)
+
+
+@responses_lib.activate
+def test_get_aes_key_raises_on_http_error():
+    responses_lib.add(
+        responses_lib.GET,
+        'https://play.boomstream.com/api/process/bad',
+        status=403,
+    )
+    with pytest.raises(Exception):
+        get_aes_key('bad')
