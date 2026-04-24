@@ -118,3 +118,34 @@ def test_compute_iv_length():
     iv = compute_iv_from_xmedia_ready(sample)
     assert len(iv) == 16
     assert isinstance(iv, bytes)
+
+
+# ── Task 5: Chunk download and AES-128-CBC decryption ─────────────────────────
+
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives import padding as crypto_padding
+from boomdown import download_and_decrypt_chunk
+
+
+def _encrypt_chunk(plaintext: bytes, key: bytes, iv: bytes) -> bytes:
+    padder = crypto_padding.PKCS7(128).padder()
+    padded = padder.update(plaintext) + padder.finalize()
+    cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
+    enc = cipher.encryptor()
+    return enc.update(padded) + enc.finalize()
+
+
+@responses_lib.activate
+def test_download_and_decrypt_chunk():
+    key = b'0123456789abcdef'
+    iv  = b'\x00' * 16
+    plaintext = b'\x47' * 188  # one MPEG-TS packet (sync byte pattern)
+
+    ciphertext = _encrypt_chunk(plaintext, key, iv)
+    responses_lib.add(
+        responses_lib.GET,
+        'https://cdn.example.com/chunk_000.ts',
+        body=ciphertext,
+    )
+    result = download_and_decrypt_chunk('https://cdn.example.com/chunk_000.ts', key, iv)
+    assert result == plaintext

@@ -64,6 +64,19 @@ def get_aes_key(xmedia_ready: str) -> bytes:
     return bytes(ord(c) for c in r.text)
 
 
+def download_and_decrypt_chunk(url: str, key: bytes, iv: bytes) -> bytes:
+    r = requests.get(url, headers=HEADERS)
+    r.raise_for_status()
+    cipher = Cipher(algorithms.AES(key), modes.CBC(iv))
+    decryptor = cipher.decryptor()
+    decrypted = decryptor.update(r.content) + decryptor.finalize()
+    try:
+        unpadder = padding.PKCS7(128).unpadder()
+        return unpadder.update(decrypted) + unpadder.finalize()
+    except ValueError:
+        return decrypted  # no valid PKCS7 padding — return raw
+
+
 def extract_iv_from_chunklist(chunklist: str):
     """Returns 16-byte IV from #EXT-X-KEY:IV=0x... or None if absent."""
     for line in chunklist.splitlines():
