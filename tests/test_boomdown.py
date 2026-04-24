@@ -97,3 +97,24 @@ def test_get_aes_key_raises_on_http_error():
     )
     with pytest.raises(Exception):
         get_aes_key('bad')
+
+
+# ── Task 4: IV fallback via XOR decode ────────────────────────────────────────
+
+from boomdown import _xor_decrypt, compute_iv_from_xmedia_ready
+
+
+def test_xor_decrypt_roundtrip():
+    from boomdown import XOR_KEY
+    plaintext = 'hello world XOR!'  # 16 chars
+    key_repeated = (XOR_KEY * 10)[:len(plaintext)]
+    hex_enc = ''.join(f'{ord(c) ^ ord(k):02x}' for c, k in zip(plaintext, key_repeated))
+    assert _xor_decrypt(hex_enc, XOR_KEY) == plaintext
+
+
+def test_compute_iv_length():
+    # 36-byte X-MEDIA-READY; IV = decoded bytes 20–35
+    sample = '2c0d166b363b36350329283621242f373533173239330e5e052552350a1b165f2e353d51'
+    iv = compute_iv_from_xmedia_ready(sample)
+    assert len(iv) == 16
+    assert isinstance(iv, bytes)

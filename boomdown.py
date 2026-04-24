@@ -40,6 +40,22 @@ def extract_chunk_urls(chunklist: str) -> list:
             if line.strip().startswith('https://')]
 
 
+def _xor_decrypt(hex_string: str, key: str) -> str:
+    """XOR-decodes a hex-encoded string with a repeating string key."""
+    n_bytes = len(hex_string) // 2
+    repeated = (key * (n_bytes // len(key) + 1))[:n_bytes]
+    return ''.join(
+        chr(int(hex_string[i * 2:i * 2 + 2], 16) ^ ord(repeated[i]))
+        for i in range(n_bytes)
+    )
+
+
+def compute_iv_from_xmedia_ready(xmedia_ready: str) -> bytes:
+    """Computes the AES IV from #EXT-X-MEDIA-READY via XOR decode (fallback)."""
+    decrypted = _xor_decrypt(xmedia_ready, XOR_KEY)
+    return bytes(ord(c) for c in decrypted[20:36])
+
+
 def get_aes_key(xmedia_ready: str) -> bytes:
     """Fetches the 16-byte AES-128 key from the Boomstream API."""
     r = requests.get(BOOMSTREAM_API + xmedia_ready, headers=HEADERS)
