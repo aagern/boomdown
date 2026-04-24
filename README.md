@@ -1,6 +1,8 @@
   ## Boomstream download
   
-  The script automates video download for your video for testing purposes.
+  The script automates video acquisition for your video embedded using [Boomstream](https://boomstream.ru/) for testing purposes.
+  
+  Tested on: macOS 15.7.4
   
   ### Requirements:
   
