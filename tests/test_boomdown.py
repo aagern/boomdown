@@ -158,7 +158,7 @@ from unittest.mock import patch, MagicMock
 from boomdown import merge_to_mp4
 
 
-def test_merge_to_mp4_calls_ffmpeg(tmp_path):
+def test_merge_to_mp4_calls_ffmpeg_with_single_ts(tmp_path):
     chunks = [str(tmp_path / f'{i:05d}.ts') for i in range(3)]
     for c in chunks:
         open(c, 'wb').close()
@@ -170,11 +170,37 @@ def test_merge_to_mp4_calls_ffmpeg(tmp_path):
 
     call_args = mock_run.call_args[0][0]
     assert call_args[0] == 'ffmpeg'
-    assert '-f' in call_args and 'concat' in call_args
+    # Must NOT use the concat demuxer — ffmpeg must receive a single -i TS file
+    assert '-f' not in call_args
+    assert 'concat' not in call_args
     assert output in call_args
 
 
-def test_merge_to_mp4_cleans_up_concat_file(tmp_path):
+def test_merge_to_mp4_concatenates_chunks_in_order(tmp_path):
+    chunk_data = [b'\x01\x02\x03\x04', b'\x05\x06\x07\x08', b'\x09\x0a\x0b\x0c']
+    chunks = []
+    for i, data in enumerate(chunk_data):
+        path = str(tmp_path / f'{i:05d}.ts')
+        with open(path, 'wb') as f:
+            f.write(data)
+        chunks.append(path)
+    output = str(tmp_path / 'out.mp4')
+
+    ffmpeg_input_bytes = []
+
+    def capture_ffmpeg(cmd, **kwargs):
+        ts_path = cmd[cmd.index('-i') + 1]
+        with open(ts_path, 'rb') as f:
+            ffmpeg_input_bytes.append(f.read())
+        return MagicMock(returncode=0)
+
+    with patch('subprocess.run', side_effect=capture_ffmpeg):
+        merge_to_mp4(chunks, output)
+
+    assert ffmpeg_input_bytes[0] == b'\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c'
+
+
+def test_merge_to_mp4_cleans_up_tmp_ts(tmp_path):
     chunks = [str(tmp_path / '00000.ts')]
     open(chunks[0], 'wb').close()
     output = str(tmp_path / 'out.mp4')
@@ -182,5 +208,4 @@ def test_merge_to_mp4_cleans_up_concat_file(tmp_path):
     with patch('subprocess.run'):
         merge_to_mp4(chunks, output)
 
-    leftover = [f for f in os.listdir(tmp_path) if f.endswith('.concat.txt')]
-    assert leftover == []
+    assert not os.path.exists(output + '.tmp.ts')

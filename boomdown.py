@@ -96,19 +96,19 @@ def main():
 
 def merge_to_mp4(chunk_paths: list, output: str) -> None:
     """Concatenates decrypted .ts chunks and remuxes to MP4 (no re-encode)."""
-    concat_list = output + '.concat.txt'
+    merged_ts = output + '.tmp.ts'
     try:
-        with open(concat_list, 'w') as f:
+        with open(merged_ts, 'wb') as out:
             for path in chunk_paths:
-                f.write(f"file '{path}'\n")
+                with open(path, 'rb') as f:
+                    out.write(f.read())
         subprocess.run(
-            ['ffmpeg', '-y', '-f', 'concat', '-safe', '0',
-             '-i', concat_list, '-c', 'copy', output],
+            ['ffmpeg', '-y', '-i', merged_ts, '-c', 'copy', output],
             check=True,
         )
     finally:
-        if os.path.exists(concat_list):
-            os.unlink(concat_list)
+        if os.path.exists(merged_ts):
+            os.unlink(merged_ts)
 
 
 def run(chunklist_url: str, output: str) -> None:
