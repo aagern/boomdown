@@ -111,56 +111,38 @@ def merge_to_mp4(chunk_paths: list, output: str) -> None:
             os.unlink(merged_ts)
 
 
-def patch_key_uri(chunklist: str, key_path: str) -> str:
-    """Replaces the #EXT-X-KEY URI with a local file:// path for ffmpeg."""
-    return re.sub(r'URI="[^"]+"', f'URI="file://{key_path}"', chunklist)
-
-
-def download_video(chunklist: str, key_bytes: bytes, output: str) -> None:
-    """Patches the m3u8 with a local key file and runs ffmpeg to download+decrypt."""
-    key_fd, key_path = tempfile.mkstemp(suffix='.bin')
-    ml_fd, ml_path = tempfile.mkstemp(suffix='.m3u8')
-    try:
-        os.write(key_fd, key_bytes)
-        os.close(key_fd)
-        patched = patch_key_uri(chunklist, key_path)
-        os.write(ml_fd, patched.encode('utf-8'))
-        os.close(ml_fd)
-        subprocess.run(
-            [
-                'ffmpeg', '-y',
-                '-allowed_extensions', 'ALL',
-                '-protocol_whitelist', 'file,crypto,data,http,https,tcp,tls',
-                '-headers', (
-                    'Referer: https://play.boomstream.com/\r\n'
-                    'User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 '
-                    '(KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36\r\n'
-                ),
-                '-i', ml_path,
-                '-c', 'copy', output,
-            ],
-            check=True,
-        )
-    finally:
-        for path in (key_path, ml_path):
-            if os.path.exists(path):
-                os.unlink(path)
-
-
 def run(chunklist_url: str, output: str) -> None:
     print(f'Fetching chunklist: {chunklist_url}')
     chunklist = fetch_text(chunklist_url)
 
     xmedia_ready = extract_xmedia_ready(chunklist)
-    chunk_count = len(extract_chunk_urls(chunklist))
-    print(f'Found {chunk_count} chunks')
+    chunk_urls = extract_chunk_urls(chunklist)
+    print(f'Found {len(chunk_urls)} chunks')
 
     print('Fetching AES key...')
     key = get_aes_key(xmedia_ready)
-    print(f'Key: {key.hex()}')
 
-    print(f'Downloading and merging {chunk_count} chunks → {output}')
-    download_video(chunklist, key, output)
+    iv = extract_iv_from_chunklist(chunklist)
+    if iv is None:
+        print('IV not in playlist — computing from X-MEDIA-READY')
+        iv = compute_iv_from_xmedia_ready(xmedia_ready)
+
+    print(f'Key: {key.hex()}')
+    print(f'IV:  {iv.hex()}')
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        chunk_paths = []
+        for i, url in enumerate(chunk_urls):
+            print(f'  [{i + 1}/{len(chunk_urls)}] {url.split("/")[-1]}')
+            data = download_and_decrypt_chunk(url, key, iv)
+            path = os.path.join(tmpdir, f'{i:05d}.ts')
+            with open(path, 'wb') as f:
+                f.write(data)
+            chunk_paths.append(path)
+
+        print(f'Merging {len(chunk_paths)} chunks → {output}')
+        merge_to_mp4(chunk_paths, output)
+
     print(f'Done: {output}')
 
 
