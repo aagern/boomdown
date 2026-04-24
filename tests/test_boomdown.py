@@ -1,3 +1,4 @@
+import re
 import subprocess
 import sys
 
@@ -209,3 +210,68 @@ def test_merge_to_mp4_cleans_up_tmp_ts(tmp_path):
         merge_to_mp4(chunks, output)
 
     assert not os.path.exists(output + '.tmp.ts')
+
+
+# ── New pipeline: ffmpeg handles HLS decryption ───────────────────────────────
+
+from boomdown import patch_key_uri, download_video
+
+
+def test_patch_key_uri_replaces_uri():
+    chunklist = (
+        '#EXT-X-KEY:METHOD=AES-128,'
+        'URI="https://play.boomstream.com/api/process/abc",'
+        'IV=0x1234567890abcdef1234567890abcdef\n'
+        'https://cdn.example.com/chunk.ts\n'
+    )
+    result = patch_key_uri(chunklist, '/tmp/key.bin')
+    assert 'URI="file:///tmp/key.bin"' in result
+    assert 'https://play.boomstream.com' not in result
+    # IV and rest of the tag must be preserved
+    assert 'IV=0x1234567890abcdef1234567890abcdef' in result
+
+
+def test_download_video_writes_raw_key_and_patched_m3u8(tmp_path):
+    chunklist = (
+        '#EXT-X-KEY:METHOD=AES-128,URI="https://example.com/key",IV=0x00\n'
+        'https://example.com/chunk.ts\n'
+    )
+    key_bytes = b'0123456789abcdef'
+    output = str(tmp_path / 'out.mp4')
+
+    captured_key = []
+    captured_m3u8 = []
+
+    def capture_ffmpeg(cmd, **kwargs):
+        ml_path = cmd[cmd.index('-i') + 1]
+        with open(ml_path, 'r') as f:
+            content = f.read()
+        m = re.search(r'URI="file://([^"]+)"', content)
+        if m:
+            with open(m.group(1), 'rb') as f:
+                captured_key.append(f.read())
+        captured_m3u8.append(content)
+        return MagicMock(returncode=0)
+
+    with patch('subprocess.run', side_effect=capture_ffmpeg):
+        download_video(chunklist, key_bytes, output)
+
+    assert captured_key[0] == key_bytes
+    assert 'file://' in captured_m3u8[0]
+
+
+def test_download_video_cleans_up_temp_files(tmp_path):
+    chunklist = '#EXT-X-KEY:METHOD=AES-128,URI="https://example.com/key"\n'
+    key_bytes = b'0123456789abcdef'
+    output = str(tmp_path / 'out.mp4')
+
+    captured_ml_path = []
+
+    def capture_ffmpeg(cmd, **kwargs):
+        captured_ml_path.append(cmd[cmd.index('-i') + 1])
+        return MagicMock(returncode=0)
+
+    with patch('subprocess.run', side_effect=capture_ffmpeg):
+        download_video(chunklist, key_bytes, output)
+
+    assert not os.path.exists(captured_ml_path[0])
