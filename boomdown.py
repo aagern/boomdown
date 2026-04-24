@@ -4,7 +4,6 @@ import argparse
 import os
 import re
 import subprocess
-import sys
 import tempfile
 
 import requests
@@ -113,7 +112,38 @@ def merge_to_mp4(chunk_paths: list, output: str) -> None:
 
 
 def run(chunklist_url: str, output: str) -> None:
-    pass
+    print(f'Fetching chunklist: {chunklist_url}')
+    chunklist = fetch_text(chunklist_url)
+
+    xmedia_ready = extract_xmedia_ready(chunklist)
+    chunk_urls = extract_chunk_urls(chunklist)
+    print(f'Found {len(chunk_urls)} chunks')
+
+    print('Fetching AES key...')
+    key = get_aes_key(xmedia_ready)
+
+    iv = extract_iv_from_chunklist(chunklist)
+    if iv is None:
+        print('IV not in playlist — computing from X-MEDIA-READY')
+        iv = compute_iv_from_xmedia_ready(xmedia_ready)
+
+    print(f'Key: {key.hex()}')
+    print(f'IV:  {iv.hex()}')
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        chunk_paths = []
+        for i, url in enumerate(chunk_urls):
+            print(f'  [{i + 1}/{len(chunk_urls)}] {url.split("/")[-1]}')
+            data = download_and_decrypt_chunk(url, key, iv)
+            path = os.path.join(tmpdir, f'{i:05d}.ts')
+            with open(path, 'wb') as f:
+                f.write(data)
+            chunk_paths.append(path)
+
+        print(f'Merging {len(chunk_paths)} chunks → {output}')
+        merge_to_mp4(chunk_paths, output)
+
+    print(f'Done: {output}')
 
 
 if __name__ == '__main__':
