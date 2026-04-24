@@ -1,3 +1,4 @@
+import re
 import subprocess
 import sys
 
@@ -7,6 +8,8 @@ from boomdown import (
     extract_xmedia_ready,
     extract_chunk_urls,
     extract_iv_from_chunklist,
+    extract_media_sequence,
+    compute_segment_iv,
 )
 
 SAMPLE_CHUNKLIST = """\
@@ -67,6 +70,36 @@ def test_extract_iv_present():
 
 def test_extract_iv_absent():
     assert extract_iv_from_chunklist(CHUNKLIST_NO_IV) is None
+
+
+def test_extract_iv_short_hex():
+    # Real boomstream IV: sequence number without leading zeros e.g. 6250 = 0x186A
+    chunklist = '#EXT-X-KEY:METHOD=AES-128,URI="https://example.com/key",IV=0x186A\n'
+    iv = extract_iv_from_chunklist(chunklist)
+    assert iv == bytes.fromhex('0000000000000000000000000000186A')
+    assert len(iv) == 16
+
+
+def test_extract_iv_uppercase_prefix():
+    chunklist = '#EXT-X-KEY:METHOD=AES-128,URI="https://example.com/key",IV=0X00FF\n'
+    iv = extract_iv_from_chunklist(chunklist)
+    assert iv == bytes.fromhex('000000000000000000000000000000FF')
+
+
+def test_extract_media_sequence():
+    chunklist = '#EXTM3U\n#EXT-X-MEDIA-SEQUENCE:6249\nhttps://cdn.example.com/chunk.ts\n'
+    assert extract_media_sequence(chunklist) == 6249
+
+
+def test_extract_media_sequence_missing_defaults_to_zero():
+    assert extract_media_sequence('#EXTM3U\n') == 0
+
+
+def test_compute_segment_iv():
+    # Sequence 6249 → 128-bit big-endian integer
+    assert compute_segment_iv(6249) == (6249).to_bytes(16, 'big')
+    assert len(compute_segment_iv(0)) == 16
+    assert compute_segment_iv(0) == b'\x00' * 16
 
 
 # ── Task 3: AES key retrieval ─────────────────────────────────────────────────
@@ -209,3 +242,50 @@ def test_merge_to_mp4_cleans_up_tmp_ts(tmp_path):
         merge_to_mp4(chunks, output)
 
     assert not os.path.exists(output + '.tmp.ts')
+
+
+# ── Task 8: Per-segment IV in run() when #EXT-X-KEY has no IV= ───────────────
+
+from boomdown import run
+
+CHUNKLIST_NO_IV_WITH_SEQ = """\
+#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-MEDIA-READY:abc123
+#EXT-X-MEDIA-SEQUENCE:6249
+#EXT-X-KEY:METHOD=AES-128,URI="https://play.boomstream.com/api/process/abc123"
+#EXTINF:6.000,
+https://cdn.boomstream.com/chunk_000.ts
+#EXTINF:6.000,
+https://cdn.boomstream.com/chunk_001.ts
+#EXT-X-ENDLIST
+"""
+
+
+@responses_lib.activate
+def test_run_uses_per_segment_iv_when_iv_absent(tmp_path):
+    key_text = '5p13wrNTEYPCCiiE'
+    responses_lib.add(
+        responses_lib.GET,
+        'https://cdn.boomstream.com/chunklist.m3u8',
+        body=CHUNKLIST_NO_IV_WITH_SEQ,
+    )
+    responses_lib.add(
+        responses_lib.GET,
+        'https://play.boomstream.com/api/process/abc123',
+        body=key_text,
+    )
+
+    captured_ivs = []
+
+    def fake_decrypt(url, key, iv):
+        captured_ivs.append(iv)
+        return b'\x47' * 188
+
+    output = str(tmp_path / 'out.mp4')
+    with patch('boomdown.download_and_decrypt_chunk', side_effect=fake_decrypt), \
+         patch('boomdown.merge_to_mp4'):
+        run('https://cdn.boomstream.com/chunklist.m3u8', output)
+
+    assert captured_ivs[0] == compute_segment_iv(6249)
+    assert captured_ivs[1] == compute_segment_iv(6250)

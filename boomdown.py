@@ -77,13 +77,30 @@ def download_and_decrypt_chunk(url: str, key: bytes, iv: bytes) -> bytes:
 
 
 def extract_iv_from_chunklist(chunklist: str):
-    """Returns 16-byte IV from #EXT-X-KEY:IV=0x... or None if absent."""
+    """Returns 16-byte IV from #EXT-X-KEY:IV=0x... or None if absent.
+
+    Accepts any hex length (leading zeros may be omitted by some encoders)
+    and left-pads to 128 bits.
+    """
     for line in chunklist.splitlines():
         if '#EXT-X-KEY' in line:
-            m = re.search(r'IV=0x([0-9a-fA-F]{32})', line)
+            m = re.search(r'IV=0[xX]([0-9a-fA-F]{1,32})', line)
             if m:
-                return bytes.fromhex(m.group(1))
+                return bytes.fromhex(m.group(1).zfill(32))
     return None
+
+
+def extract_media_sequence(chunklist: str) -> int:
+    """Returns the starting media sequence number (0 if tag absent)."""
+    for line in chunklist.splitlines():
+        if line.startswith('#EXT-X-MEDIA-SEQUENCE:'):
+            return int(line.split(':', 1)[1].strip())
+    return 0
+
+
+def compute_segment_iv(sequence_number: int) -> bytes:
+    """Returns the 16-byte AES IV for an HLS segment (sequence number as big-endian int)."""
+    return sequence_number.to_bytes(16, 'big')
 
 
 def main():
@@ -122,17 +139,18 @@ def run(chunklist_url: str, output: str) -> None:
     print('Fetching AES key...')
     key = get_aes_key(xmedia_ready)
 
-    iv = extract_iv_from_chunklist(chunklist)
-    if iv is None:
-        print('IV not in playlist — computing from X-MEDIA-READY')
-        iv = compute_iv_from_xmedia_ready(xmedia_ready)
-
+    iv_explicit = extract_iv_from_chunklist(chunklist)
+    media_sequence = extract_media_sequence(chunklist)
+    if iv_explicit is None:
+        print(f'IV not in playlist — using per-segment IV (media sequence {media_sequence})')
+    else:
+        print(f'IV:  {iv_explicit.hex()}')
     print(f'Key: {key.hex()}')
-    print(f'IV:  {iv.hex()}')
 
     with tempfile.TemporaryDirectory() as tmpdir:
         chunk_paths = []
         for i, url in enumerate(chunk_urls):
+            iv = iv_explicit if iv_explicit is not None else compute_segment_iv(media_sequence + i)
             print(f'  [{i + 1}/{len(chunk_urls)}] {url.split("/")[-1]}')
             data = download_and_decrypt_chunk(url, key, iv)
             path = os.path.join(tmpdir, f'{i:05d}.ts')
