@@ -149,3 +149,38 @@ def test_download_and_decrypt_chunk():
     )
     result = download_and_decrypt_chunk('https://cdn.example.com/chunk_000.ts', key, iv)
     assert result == plaintext
+
+
+# ── Task 6: Merge chunks to MP4 with ffmpeg ───────────────────────────────────
+
+import os
+from unittest.mock import patch, MagicMock
+from boomdown import merge_to_mp4
+
+
+def test_merge_to_mp4_calls_ffmpeg(tmp_path):
+    chunks = [str(tmp_path / f'{i:05d}.ts') for i in range(3)]
+    for c in chunks:
+        open(c, 'wb').close()
+    output = str(tmp_path / 'out.mp4')
+
+    with patch('subprocess.run') as mock_run:
+        mock_run.return_value = MagicMock(returncode=0)
+        merge_to_mp4(chunks, output)
+
+    call_args = mock_run.call_args[0][0]
+    assert call_args[0] == 'ffmpeg'
+    assert '-f' in call_args and 'concat' in call_args
+    assert output in call_args
+
+
+def test_merge_to_mp4_cleans_up_concat_file(tmp_path):
+    chunks = [str(tmp_path / '00000.ts')]
+    open(chunks[0], 'wb').close()
+    output = str(tmp_path / 'out.mp4')
+
+    with patch('subprocess.run'):
+        merge_to_mp4(chunks, output)
+
+    leftover = [f for f in os.listdir(tmp_path) if f.endswith('.concat.txt')]
+    assert leftover == []
