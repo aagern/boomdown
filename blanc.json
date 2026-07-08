@@ -1,0 +1,1669 @@
+{
+  "log": {
+    "level": "info",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "https",
+        "tag": "dns-proxy",
+        "server": "1.1.1.1",
+        "detour": "select"
+      },
+      {
+        "type": "udp",
+        "tag": "dns-direct",
+        "server": "77.88.8.8"
+      },
+      {
+        "type": "local",
+        "tag": "dns-local"
+      }
+    ],
+    "rules": [
+      {
+        "rule_set": [
+          "geosite-private"
+        ],
+        "server": "dns-local"
+      },
+      {
+        "rule_set": [
+          "geosite-ru"
+        ],
+        "server": "dns-direct"
+      },
+      {
+        "clash_mode": "Direct",
+        "server": "dns-direct"
+      },
+      {
+        "clash_mode": "Global",
+        "server": "dns-proxy"
+      }
+    ],
+    "final": "dns-proxy",
+    "strategy": "prefer_ipv4"
+  },
+  "inbounds": [
+    {
+      "type": "tun",
+      "tag": "tun-in",
+      "address": [
+        "172.19.0.1/30",
+        "fdfe:dcba:9876::1/126"
+      ],
+      "auto_route": true,
+      "stack": "mixed",
+      "strict_route": true
+    },
+    {
+      "type": "mixed",
+      "tag": "mixed-in",
+      "listen": "127.0.0.1",
+      "listen_port": 2080
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "select",
+      "outbounds": [
+        "auto",
+        "🇰🇿 Алматы, Казахстан, Extra",
+        "🇳🇱 Амстердам, Нидерланды, Extra",
+        "🇬🇷 Афины, Греция, Extra",
+        "🇮🇳 Бангалор, Индия, Extra",
+        "🇩🇪 Берлин, Германия, Extra",
+        "🇨🇴 Богота, Колумбия, Extra",
+        "🇸🇰 Братислава, Словакия, Extra",
+        "🇧🇪 Брюссель, Бельгия, Extra",
+        "🇭🇺 Будапешт, Венгрия, Extra",
+        "🇷🇴 Бухарест, Румыния, Extra",
+        "🇦🇷 Буэнос-Айрес, Аргентина, Extra",
+        "🇵🇱 Варшава, Польша, Extra",
+        "🇦🇹 Вена, Австрия, Extra",
+        "🇱🇹 Вильнюс, Литва, Extra",
+        "🇭🇰 Гонконг, Гонконг, Extra",
+        "🇮🇪 Дублин, Ирландия, Extra",
+        "🇭🇷 Загреб, Хорватия, Extra",
+        "🇿🇦 Йоханнесбург, ЮАР, Extra",
+        "🇲🇽 Керетаро, Мексика, Extra",
+        "🇺🇦 Киев, Украина, Extra",
+        "🇩🇰 Копенгаген, Дания, Extra",
+        "🇲🇾 Куала-Лумпур, Малайзия, Extra",
+        "🇵🇪 Лима, Перу, Extra",
+        "🇵🇹 Лиссабон, Португалия, Extra",
+        "🇬🇧 Лондон, Великобритания, Extra",
+        "🇺🇸 Лос-Анджелес, США, Extra",
+        "🇪🇸 Мадрид, Испания, Extra",
+        "🇺🇸 Майами, США, Extra",
+        "🇮🇹 Милан, Италия, Extra",
+        "🇺🇸 Нью-Йорк, США, Extra",
+        "🇳🇴 Осло, Норвегия, Extra",
+        "🇫🇮 Оулу, Финляндия, Extra",
+        "🇫🇷 Париж, Франция, Extra",
+        "🇨🇿 Прага, Чехия, Extra",
+        "🇷🇺 Москва, Россия, Extra",
+        "🇧🇷 Сан-Паулу, Бразилия, Extra",
+        "🇺🇸 Сан-Хосе, США, Extra",
+        "🇰🇷 Сеул, Южная Корея, Extra",
+        "🇦🇺 Сидней, Австралия, Extra",
+        "🇸🇬 Сингапур, Сингапур, Extra",
+        "🇧🇬 София, Болгария, Extra",
+        "🇹🇷 Стамбул, Турция, Extra",
+        "🇸🇪 Стокгольм, Швеция, Extra",
+        "🇮🇱 Тель-Авив, Израиль, Extra",
+        "🇯🇵 Токио, Япония, Extra",
+        "🇨🇦 Торонто, Канада, Extra",
+        "🇩🇪 Франкфурт-на-Майне, Германия, Extra",
+        "🇦🇪 Фуджайра, ОАЭ, Extra",
+        "🇺🇸 Хьюстон, США, Extra",
+        "🇨🇭 Цюрих, Швейцария, Extra",
+        "🇩🇪 Германия, Extra Whitelist1",
+        "🇳🇱 Нидерланды, Extra Whitelist1",
+        "🇫🇮 Финляндия, Extra Whitelist1",
+        "🇸🇪 Швеция, Extra Whitelist1",
+        "🇱🇹 Литва, Extra Whitelist1",
+        "🇷🇺 Россия, Extra Whitelist1",
+        "🇩🇪 Германия, Extra Whitelist2",
+        "🇳🇱 Нидерланды, Extra Whitelist2",
+        "🇫🇮 Финляндия, Extra Whitelist2",
+        "🇸🇪 Швеция, Extra Whitelist2",
+        "🇱🇹 Литва, Extra Whitelist2",
+        "🇷🇺 Россия, Extra Whitelist2",
+        "🇩🇪 Германия, Extra Whitelist3",
+        "🇳🇱 Нидерланды, Extra Whitelist3",
+        "🇫🇮 Финляндия, Extra Whitelist3",
+        "🇸🇪 Швеция, Extra Whitelist3",
+        "🇱🇹 Литва, Extra Whitelist3",
+        "🇷🇺 Россия, Extra Whitelist3"
+      ],
+      "default": "auto",
+      "interrupt_exist_connections": false
+    },
+    {
+      "type": "urltest",
+      "tag": "auto",
+      "outbounds": [
+        "🇰🇿 Алматы, Казахстан, Extra",
+        "🇳🇱 Амстердам, Нидерланды, Extra",
+        "🇬🇷 Афины, Греция, Extra",
+        "🇮🇳 Бангалор, Индия, Extra",
+        "🇩🇪 Берлин, Германия, Extra",
+        "🇨🇴 Богота, Колумбия, Extra",
+        "🇸🇰 Братислава, Словакия, Extra",
+        "🇧🇪 Брюссель, Бельгия, Extra",
+        "🇭🇺 Будапешт, Венгрия, Extra",
+        "🇷🇴 Бухарест, Румыния, Extra",
+        "🇦🇷 Буэнос-Айрес, Аргентина, Extra",
+        "🇵🇱 Варшава, Польша, Extra",
+        "🇦🇹 Вена, Австрия, Extra",
+        "🇱🇹 Вильнюс, Литва, Extra",
+        "🇭🇰 Гонконг, Гонконг, Extra",
+        "🇮🇪 Дублин, Ирландия, Extra",
+        "🇭🇷 Загреб, Хорватия, Extra",
+        "🇿🇦 Йоханнесбург, ЮАР, Extra",
+        "🇲🇽 Керетаро, Мексика, Extra",
+        "🇺🇦 Киев, Украина, Extra",
+        "🇩🇰 Копенгаген, Дания, Extra",
+        "🇲🇾 Куала-Лумпур, Малайзия, Extra",
+        "🇵🇪 Лима, Перу, Extra",
+        "🇵🇹 Лиссабон, Португалия, Extra",
+        "🇬🇧 Лондон, Великобритания, Extra",
+        "🇺🇸 Лос-Анджелес, США, Extra",
+        "🇪🇸 Мадрид, Испания, Extra",
+        "🇺🇸 Майами, США, Extra",
+        "🇮🇹 Милан, Италия, Extra",
+        "🇺🇸 Нью-Йорк, США, Extra",
+        "🇳🇴 Осло, Норвегия, Extra",
+        "🇫🇮 Оулу, Финляндия, Extra",
+        "🇫🇷 Париж, Франция, Extra",
+        "🇨🇿 Прага, Чехия, Extra",
+        "🇷🇺 Москва, Россия, Extra",
+        "🇧🇷 Сан-Паулу, Бразилия, Extra",
+        "🇺🇸 Сан-Хосе, США, Extra",
+        "🇰🇷 Сеул, Южная Корея, Extra",
+        "🇦🇺 Сидней, Австралия, Extra",
+        "🇸🇬 Сингапур, Сингапур, Extra",
+        "🇧🇬 София, Болгария, Extra",
+        "🇹🇷 Стамбул, Турция, Extra",
+        "🇸🇪 Стокгольм, Швеция, Extra",
+        "🇮🇱 Тель-Авив, Израиль, Extra",
+        "🇯🇵 Токио, Япония, Extra",
+        "🇨🇦 Торонто, Канада, Extra",
+        "🇩🇪 Франкфурт-на-Майне, Германия, Extra",
+        "🇦🇪 Фуджайра, ОАЭ, Extra",
+        "🇺🇸 Хьюстон, США, Extra",
+        "🇨🇭 Цюрих, Швейцария, Extra",
+        "🇩🇪 Германия, Extra Whitelist1",
+        "🇳🇱 Нидерланды, Extra Whitelist1",
+        "🇫🇮 Финляндия, Extra Whitelist1",
+        "🇸🇪 Швеция, Extra Whitelist1",
+        "🇱🇹 Литва, Extra Whitelist1",
+        "🇷🇺 Россия, Extra Whitelist1",
+        "🇩🇪 Германия, Extra Whitelist2",
+        "🇳🇱 Нидерланды, Extra Whitelist2",
+        "🇫🇮 Финляндия, Extra Whitelist2",
+        "🇸🇪 Швеция, Extra Whitelist2",
+        "🇱🇹 Литва, Extra Whitelist2",
+        "🇷🇺 Россия, Extra Whitelist2",
+        "🇩🇪 Германия, Extra Whitelist3",
+        "🇳🇱 Нидерланды, Extra Whitelist3",
+        "🇫🇮 Финляндия, Extra Whitelist3",
+        "🇸🇪 Швеция, Extra Whitelist3",
+        "🇱🇹 Литва, Extra Whitelist3",
+        "🇷🇺 Россия, Extra Whitelist3"
+      ],
+      "url": "https://cp.cloudflare.com/generate_204",
+      "interval": "10m",
+      "tolerance": 50,
+      "interrupt_exist_connections": false
+    },
+    {
+      "type": "vless",
+      "tag": "🇰🇿 Алматы, Казахстан, Extra",
+      "server": "cdn4-35.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn4-35.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇳🇱 Амстердам, Нидерланды, Extra",
+      "server": "cdn3-87.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn3-87.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇬🇷 Афины, Греция, Extra",
+      "server": "cdn9-20.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn9-20.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇮🇳 Бангалор, Индия, Extra",
+      "server": "cdn3-25.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn3-25.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇩🇪 Берлин, Германия, Extra",
+      "server": "cdn9-33.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn9-33.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇨🇴 Богота, Колумбия, Extra",
+      "server": "cdn1-08.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn1-08.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇸🇰 Братислава, Словакия, Extra",
+      "server": "cdn7-39.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn7-39.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇧🇪 Брюссель, Бельгия, Extra",
+      "server": "cdn6-91.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn6-91.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇭🇺 Будапешт, Венгрия, Extra",
+      "server": "cdn7-09.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn7-09.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇷🇴 Бухарест, Румыния, Extra",
+      "server": "cdn5-59.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn5-59.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇦🇷 Буэнос-Айрес, Аргентина, Extra",
+      "server": "cdn7-18.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn7-18.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇵🇱 Варшава, Польша, Extra",
+      "server": "cdn1-95.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn1-95.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇦🇹 Вена, Австрия, Extra",
+      "server": "cdn9-05.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn9-05.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇱🇹 Вильнюс, Литва, Extra",
+      "server": "cdn7-47.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn7-47.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇭🇰 Гонконг, Гонконг, Extra",
+      "server": "cdn1-67.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn1-67.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇮🇪 Дублин, Ирландия, Extra",
+      "server": "cdn6-72.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn6-72.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇭🇷 Загреб, Хорватия, Extra",
+      "server": "cdn5-44.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn5-44.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇿🇦 Йоханнесбург, ЮАР, Extra",
+      "server": "cdn9-57.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn9-57.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇲🇽 Керетаро, Мексика, Extra",
+      "server": "cdn5-11.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn5-11.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇦 Киев, Украина, Extra",
+      "server": "cdn3-88.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn3-88.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇩🇰 Копенгаген, Дания, Extra",
+      "server": "cdn2-15.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn2-15.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇲🇾 Куала-Лумпур, Малайзия, Extra",
+      "server": "cdn8-68.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn8-68.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇵🇪 Лима, Перу, Extra",
+      "server": "cdn6-30.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn6-30.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇵🇹 Лиссабон, Португалия, Extra",
+      "server": "cdn2-83.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn2-83.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇬🇧 Лондон, Великобритания, Extra",
+      "server": "cdn4-81.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn4-81.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 Лос-Анджелес, США, Extra",
+      "server": "cdn5-19.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn5-19.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇪🇸 Мадрид, Испания, Extra",
+      "server": "cdn5-98.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn5-98.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 Майами, США, Extra",
+      "server": "cdn8-90.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn8-90.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇮🇹 Милан, Италия, Extra",
+      "server": "cdn9-93.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn9-93.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 Нью-Йорк, США, Extra",
+      "server": "cdn2-07.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn2-07.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇳🇴 Осло, Норвегия, Extra",
+      "server": "cdn9-40.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn9-40.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇫🇮 Оулу, Финляндия, Extra",
+      "server": "cdn8-27.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn8-27.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇫🇷 Париж, Франция, Extra",
+      "server": "cdn6-49.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn6-49.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇨🇿 Прага, Чехия, Extra",
+      "server": "cdn7-54.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn7-54.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇷🇺 Москва, Россия, Extra",
+      "server": "cdn8-03.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn8-03.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇧🇷 Сан-Паулу, Бразилия, Extra",
+      "server": "cdn8-63.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn8-63.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 Сан-Хосе, США, Extra",
+      "server": "cdn4-65.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn4-65.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇰🇷 Сеул, Южная Корея, Extra",
+      "server": "cdn1-22.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn1-22.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇦🇺 Сидней, Австралия, Extra",
+      "server": "cdn1-76.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn1-76.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇸🇬 Сингапур, Сингапур, Extra",
+      "server": "cdn4-61.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn4-61.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇧🇬 София, Болгария, Extra",
+      "server": "cdn2-37.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn2-37.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇹🇷 Стамбул, Турция, Extra",
+      "server": "cdn6-24.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn6-24.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇸🇪 Стокгольм, Швеция, Extra",
+      "server": "cdn9-78.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn9-78.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇮🇱 Тель-Авив, Израиль, Extra",
+      "server": "cdn8-14.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn8-14.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇯🇵 Токио, Япония, Extra",
+      "server": "cdn2-56.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn2-56.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇨🇦 Торонто, Канада, Extra",
+      "server": "cdn4-12.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn4-12.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇩🇪 Франкфурт-на-Майне, Германия, Extra",
+      "server": "cdn3-70.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn3-70.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇦🇪 Фуджайра, ОАЭ, Extra",
+      "server": "cdn3-42.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn3-42.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇺🇸 Хьюстон, США, Extra",
+      "server": "cdn1-42.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn1-42.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇨🇭 Цюрих, Швейцария, Extra",
+      "server": "cdn5-89.vk-cdnvideo.com",
+      "server_port": 8443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "cdn5-89.vk-cdnvideo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+        "alpn": [
+          "h2"
+        ]
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇩🇪 Германия, Extra Whitelist1",
+      "server": "185.242.19.249",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/d5a8580a/019e5a54-0c3f-dd65-7d90-b51b4dedf8493",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇳🇱 Нидерланды, Extra Whitelist1",
+      "server": "185.242.19.249",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/10d58c80/019e5a54-0c3f-db38-7880-a41eb6b7d5a2",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇫🇮 Финляндия, Extra Whitelist1",
+      "server": "185.242.19.249",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/19541d9a/019e5a54-0c3f-d23b-7650-aa1997793cc10",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇸🇪 Швеция, Extra Whitelist1",
+      "server": "185.242.19.249",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/753eaec9/019e5a54-0c3f-de4c-73d4-ae3a75dbdd21a",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇱🇹 Литва, Extra Whitelist1",
+      "server": "185.242.19.249",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/b01939a8/019e5a54-0c3f-d37e-74d0-8f2a45d6d8b78",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇷🇺 Россия, Extra Whitelist1",
+      "server": "185.242.19.249",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/b30291ce/019e5a54-0c3f-d8c3-7eb7-8a1313fe46dd5",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇩🇪 Германия, Extra Whitelist2",
+      "server": "185.242.19.250",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/d5a8580a/019e5a54-0c3f-dff6-7ae5-b1426b73dd05",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇳🇱 Нидерланды, Extra Whitelist2",
+      "server": "185.242.19.250",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/10d58c80/019e5a54-0c3f-d5a0-7536-9308a891bb32",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇫🇮 Финляндия, Extra Whitelist2",
+      "server": "185.242.19.250",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/19541d9a/019e5a54-0c3f-d8d3-71ed-8511acdea7c32",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇸🇪 Швеция, Extra Whitelist2",
+      "server": "185.242.19.250",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/753eaec9/019e5a54-0c3f-dc55-751a-8d23dabc95e78",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇱🇹 Литва, Extra Whitelist2",
+      "server": "185.242.19.250",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/b01939a8/019e5a54-0c3f-d81e-739a-bc00892d1af2",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇷🇺 Россия, Extra Whitelist2",
+      "server": "185.242.19.250",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/b30291ce/019e5a54-0c3f-d196-7317-8f1f1da7371bb",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇩🇪 Германия, Extra Whitelist3",
+      "server": "185.242.19.9",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/d5a8580a/019e5a54-0c3f-e19e-7c42-8e201c04ca6a7",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇳🇱 Нидерланды, Extra Whitelist3",
+      "server": "185.242.19.9",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/10d58c80/019e5a54-0c3f-efb8-74e2-a61afaf75d49b",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇫🇮 Финляндия, Extra Whitelist3",
+      "server": "185.242.19.9",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/19541d9a/019e5a54-0c3f-e3a7-76bd-bd271976a2969",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇸🇪 Швеция, Extra Whitelist3",
+      "server": "185.242.19.9",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/753eaec9/019e5a54-0c3f-ef22-7426-a0ad019093e3",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇱🇹 Литва, Extra Whitelist3",
+      "server": "185.242.19.9",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/b01939a8/019e5a54-0c3f-e636-73c0-9422f7d9e4520",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "vless",
+      "tag": "🇷🇺 Россия, Extra Whitelist3",
+      "server": "185.242.19.9",
+      "server_port": 443,
+      "uuid": "2b2839b3-6fd8-4e45-b553-0ead5c2922fc",
+      "packet_encoding": "xudp",
+      "tls": {
+        "enabled": true,
+        "server_name": "top4034423319.mwscdn.ru",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        }
+      },
+      "transport": {
+        "type": "ws",
+        "path": "/api/v1/chat/conversations/b30291ce/019e5a54-0c3f-ed78-70d7-8a27aebf61883",
+        "headers": {
+          "Host": "cdn.chatwoop.info"
+        }
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "direct",
+      "domain_resolver": "dns-direct"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "action": "sniff"
+      },
+      {
+        "protocol": "dns",
+        "action": "hijack-dns"
+      },
+      {
+        "ip_is_private": true,
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "select"
+      },
+      {
+        "rule_set": [
+          "geosite-private"
+        ],
+        "outbound": "direct"
+      },
+      {
+        "rule_set": [
+          "geoip-ru",
+          "geosite-ru"
+        ],
+        "outbound": "direct"
+      }
+    ],
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "geoip-ru",
+        "format": "binary",
+        "url": "https://vpn-config.hous.link/geoip-ru.srs",
+        "update_interval": "1d",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-ru",
+        "format": "binary",
+        "url": "https://vpn-config.hous.link/geosite-ru.srs",
+        "update_interval": "1d",
+        "download_detour": "direct"
+      },
+      {
+        "type": "remote",
+        "tag": "geosite-private",
+        "format": "binary",
+        "url": "https://vpn-config.hous.link/geosite-private.srs",
+        "update_interval": "1d",
+        "download_detour": "direct"
+      }
+    ],
+    "final": "select",
+    "auto_detect_interface": true,
+    "default_domain_resolver": "dns-direct"
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "cache.db"
+    },
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "default_mode": "Rule"
+    }
+  }
+}
